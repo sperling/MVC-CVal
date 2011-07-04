@@ -1,4 +1,6 @@
-﻿@{
+﻿@model Demo.Controllers.Checkout
+           
+@{
     ViewBag.Title = "Home Page";
 }
 
@@ -6,3 +8,35 @@
 <p>
     To learn more about ASP.NET MVC visit <a href="http://asp.net/mvc" title="ASP.NET MVC Website">http://asp.net/mvc</a>.
 </p>
+
+@using (Html.BeginForm())
+{
+    @Html.ValidationSummary()
+
+    @Html.LabelFor(x => x.Customer.FirstName)
+    @Html.TextBoxFor(x => x.Customer.FirstName)
+    @Html.ValidationMessageFor(x => x.Customer.FirstName)
+
+    <br /><span>Använd efternamn</span><br />
+    @Html.CheckBoxFor(x => x.ShowCustomer)<br />
+    
+    @Html.LabelFor(x => x.Customer.LastName)    
+    @Html.TextBoxFor(x => x.Customer.LastName, new { style = Model.ShowCustomer ? "" : "display: none;" })<br />
+    @Html.ValidationMessageFor(x => x.Customer.LastName)
+
+    <input type="submit" />
+}
+
+<script type="text/javascript">
+    $(document).ready(function () {
+
+        $('#@Html.ViewData.TemplateInfo.GetFullHtmlFieldId("ShowCustomer")').change(function () {
+            if ($(this).is(':checked')) {
+                $('#@Html.ViewData.TemplateInfo.GetFullHtmlFieldId("Customer.LastName")').css('display', '');
+            }
+            else {
+                $('#@Html.ViewData.TemplateInfo.GetFullHtmlFieldId("Customer.LastName")').css('display', 'none');
+            }
+        });
+    });
+</script>

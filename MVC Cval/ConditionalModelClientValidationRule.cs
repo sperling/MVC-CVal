@@ -8,14 +8,14 @@ namespace MVC_Cval
 {
     internal abstract class ConditionalModelClientValidationRule : ModelClientValidationRule
     {
-        public ConditionalModelClientValidationRule(string errorMessage, bool validateIfNot, string conditionProperty)
+        public ConditionalModelClientValidationRule(string errorMessage, ICValidation validation)
         {
             ErrorMessage = errorMessage;
-            ValidationType = "CV" + VType;
-            ValidationParameters.Add("validateifnot", validateIfNot);
-            ValidationParameters.Add("conditionproperty", conditionProperty);
+            ValidationType = "cv" + OriginalValidationType;
+            ValidationParameters.Add("conditionproperty", validation.ConditionProperty);
+            ValidationParameters.Add("validateifnot", validation.ValidateIfNot);
         }
 
-        protected abstract string VType { get; }
+        protected abstract string OriginalValidationType { get; }
     }
 }

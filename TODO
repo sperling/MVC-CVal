@@ -1,0 +1,3 @@
+* Add model binder, set ValueProviderResult to default(property) if validation should not occure on OnPropertyValidating().
+* Add rest of attributes.
+* Make sure js works with radiobutton, select.
