@@ -24,6 +24,10 @@
     @Html.TextBoxFor(x => x.Customer.LastName, new { style = Model.ShowCustomer ? "" : "display: none;" })<br />
     @Html.ValidationMessageFor(x => x.Customer.LastName)
 
+    @Html.LabelFor(x => x.Customer.IntValue)    
+    @Html.TextBoxFor(x => x.Customer.IntValue, new { style = Model.ShowCustomer ? "" : "display: none;" })<br />
+    @Html.ValidationMessageFor(x => x.Customer.IntValue)
+
     <input type="submit" />
 }
 
@@ -33,9 +37,11 @@
         $('#@Html.ViewData.TemplateInfo.GetFullHtmlFieldId("ShowCustomer")').change(function () {
             if ($(this).is(':checked')) {
                 $('#@Html.ViewData.TemplateInfo.GetFullHtmlFieldId("Customer.LastName")').css('display', '');
+                $('#@Html.ViewData.TemplateInfo.GetFullHtmlFieldId("Customer.IntValue")').css('display', '');
             }
             else {
                 $('#@Html.ViewData.TemplateInfo.GetFullHtmlFieldId("Customer.LastName")').css('display', 'none');
+                $('#@Html.ViewData.TemplateInfo.GetFullHtmlFieldId("Customer.IntValue")').css('display', 'none');
             }
         });
     });

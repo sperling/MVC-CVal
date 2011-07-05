@@ -35,6 +35,8 @@ namespace Demo
 
             RegisterGlobalFilters(GlobalFilters.Filters);
             RegisterRoutes(RouteTable.Routes);
+
+            MVC_Cval.Helpers.Init();
         }
     }
 }

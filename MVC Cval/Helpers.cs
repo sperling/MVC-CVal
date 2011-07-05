@@ -36,7 +36,7 @@ namespace MVC_Cval
 
         public static void Init()
         {
-            DataAnnotationsModelValidatorProvider.RegisterAdapter(typeof(RequiredAttribute), typeof(RequiredAttributeAdapter));
+            DataAnnotationsModelValidatorProvider.RegisterAdapter(typeof(RequiredAttribute), typeof(MVC_Cval.RequiredAttributAdapter));
         }
     }
 }

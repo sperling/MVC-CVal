@@ -21,11 +21,7 @@ namespace Demo.Controllers
         {
             ViewBag.Message = "Welcome to ASP.NET MVC!";
 
-            if (!checkout.ShowCustomer)
-            {
-                checkout.Customer.LastName = String.Empty;
-            }
-
+            
             return View(checkout);
         }
 
@@ -42,6 +38,9 @@ namespace Demo.Controllers
 
         [MVC_Cval.Required(ConditionProperty = "ShowCustomer")]
         public string LastName { get; set; }
+
+        [MVC_Cval.Required(ConditionProperty = "ShowCustomer")]
+        public int IntValue { get; set; }
     }
 
     public class Checkout

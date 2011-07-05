@@ -54,7 +54,9 @@
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>if exist "$(SolutionDir)Demo\Scripts" (copy "$(ProjectDir)Scripts" "$(SolutionDir)Demo\Scripts" /Y)</PostBuildEvent>
+    <PostBuildEvent>if exist "$(SolutionDir)Demo\Scripts" (copy "$(ProjectDir)Scripts" "$(SolutionDir)Demo\Scripts" /Y)
+if exist "$(SolutionDir)Demo\Scripts" ("$(SolutionDir)tools\jsmin" &lt; "$(ProjectDir)Scripts\jquery.validate.mvccval.unobtrusive.js" &gt; "$(SolutionDir)Demo\Scripts\jquery.validate.mvccval.unobtrusive.min.js" )
+</PostBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
