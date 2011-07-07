@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Web.Mvc;
 
-namespace MVC_Cval
+namespace MVCCval
 {
     internal class BaseAttributeAdapter<T> : DataAnnotationsModelValidator<T> where T : global::System.ComponentModel.DataAnnotations.ValidationAttribute
     {

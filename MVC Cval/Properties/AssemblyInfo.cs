@@ -5,11 +5,11 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("MVC Cval")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyTitle("MVCCval")]
+[assembly: AssemblyDescription("Conditional validation support for ASP.NET MVC 3")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("MVC Cval")]
+[assembly: AssemblyCompany("Andreas Strid")]
+[assembly: AssemblyProduct("MVCCval")]
 [assembly: AssemblyCopyright("Copyright ©  2011")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]

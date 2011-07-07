@@ -6,11 +6,13 @@ using System.ComponentModel.DataAnnotations;
 using System.Web.Mvc;
 using System.Globalization;
 
-namespace MVC_Cval
+namespace MVCCval
 {
     public static class Helpers
     {
         private static readonly Type _boolType = typeof(bool);
+
+        private static bool _InitCalled = false;
 
         /// <summary>
         /// Main validation method.
@@ -58,6 +60,8 @@ namespace MVC_Cval
                 {
                     if (modelState.Value != null)
                     {
+                        // these properties has proteced setters, so need a bit of reflection to
+                        // clear out.
                         var propertyDesc = modelState.Value.GetType().GetProperty("RawValue");
                         propertyDesc.SetValue(modelState.Value, v, null);
 
@@ -72,7 +76,13 @@ namespace MVC_Cval
 
         public static void Init()
         {
-            DataAnnotationsModelValidatorProvider.RegisterAdapter(typeof(RequiredAttribute), typeof(MVC_Cval.RequiredAttributAdapter));
+            // don't do it if user already called Init for some reason and
+            // we are calling it now from MVCCvalInit.
+            if (!_InitCalled)
+            {
+                _InitCalled = true;
+                DataAnnotationsModelValidatorProvider.RegisterAdapter(typeof(RequiredAttribute), typeof(MVCCval.RequiredAttributAdapter));
+            }
         }
     }
 }

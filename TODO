@@ -1,2 +1,3 @@
 * Add rest of attributes.
 * Make sure js works with radiobutton, select.
+* Set properties in AssemblyInfo.cs

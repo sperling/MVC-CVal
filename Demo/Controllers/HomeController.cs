@@ -36,10 +36,10 @@ namespace Demo.Controllers
         [Required]
         public string FirstName { get; set; }
 
-        [MVC_Cval.Required(ConditionProperty = "ShowCustomer")]
+        [MVCCval.Required(ConditionProperty = "ShowCustomer")]
         public string LastName { get; set; }
 
-        [MVC_Cval.Required(ConditionProperty = "ShowCustomer")]
+        [MVCCval.Required(ConditionProperty = "ShowCustomer")]
         public int IntValue { get; set; }
     }
 
