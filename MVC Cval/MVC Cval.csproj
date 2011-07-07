@@ -62,7 +62,7 @@
   <ItemGroup>
     <Compile Include="BaseAttributeAdapter.cs" />
     <Compile Include="ConditionalModelClientValidationRule.cs" />
-    <None Include="content\App_Start\MVCCvalInit.cs.pp" />
+    <Content Include="content\App_Start\MVCCValInit.cs.pp" />
     <Compile Include="Helpers.cs" />
     <Compile Include="ICValidation.cs" />
     <Compile Include="ICValidationInternal.cs" />
