@@ -6,9 +6,10 @@ using System.Web.Mvc;
 
 namespace MVCCval
 {
-    public class RequiredAttribute : System.ComponentModel.DataAnnotations.RequiredAttribute, IClientValidatable, ICValidation, ICValidationInternal
+    public class StringLengthAttribute : System.ComponentModel.DataAnnotations.StringLengthAttribute, IClientValidatable, ICValidation, ICValidationInternal
     {
-        public RequiredAttribute(string conditionProperty) : base()
+        public StringLengthAttribute(string conditionProperty, int maximumLength)
+            : base(maximumLength)
         {
             if (String.IsNullOrEmpty(conditionProperty))
             {
@@ -22,17 +23,18 @@ namespace MVCCval
 
         public IEnumerable<ModelClientValidationRule> GetClientValidationRules(ModelMetadata metadata, ControllerContext context)
         {
-            return new[] { new ModelClientValidationRequiredRule(this.FormatErrorMessage(metadata.GetDisplayName()), this, this) };
+            return new[] { new ModelClientValidationStringLengthRule(this.FormatErrorMessage(metadata.GetDisplayName()), this, this, MinimumLength, MaximumLength) };
         }
 
         #endregion
 
         #region ICValidation Members
-        
-        /// <summary>
-        /// 
-        /// </summary>
-        public bool ValidateIfNot { get; set; }
+
+        public bool ValidateIfNot
+        {
+            get;
+            set;
+        }
 
         #endregion
 
@@ -68,32 +70,42 @@ namespace MVCCval
             set;
         }
 
-
         #endregion
 
         protected override System.ComponentModel.DataAnnotations.ValidationResult IsValid(object value, System.ComponentModel.DataAnnotations.ValidationContext validationContext)
         {
             var result = this.CValidate(value, validationContext, base.IsValid, this);
-            
+
             return result;
         }
 
-        class ModelClientValidationRequiredRule : ConditionalModelClientValidationRule
+        class ModelClientValidationStringLengthRule : ConditionalModelClientValidationRule
         {
-            public ModelClientValidationRequiredRule(string errorMessage, ICValidation validation, ICValidationInternal validationInternal) : base(errorMessage, validation, validationInternal)
+            public ModelClientValidationStringLengthRule(string errorMessage, ICValidation validation, ICValidationInternal validationInternal, int minimumLength, int maximumLength)
+                : base(errorMessage, validation, validationInternal)
             {
+                if (minimumLength != 0)
+                {
+                    ValidationParameters["min"] = minimumLength;
+                }
+
+                if (maximumLength != Int32.MaxValue)
+                {
+                    ValidationParameters["max"] = maximumLength;
+                }
             }
 
             protected override string OriginalValidationType
             {
-                get { return "required"; }
+                get { return "length"; }
             }
         }
     }
 
-    internal class RequiredAttributAdapter : BaseAttributeAdapter<RequiredAttribute>
+    internal class StringLengthAttributAdapter : BaseAttributeAdapter<StringLengthAttribute>
     {
-        public RequiredAttributAdapter(ModelMetadata metadata, ControllerContext context, RequiredAttribute attribute) : base(metadata, context, attribute)
+        public StringLengthAttributAdapter(ModelMetadata metadata, ControllerContext context, StringLengthAttribute attribute)
+            : base(metadata, context, attribute)
         {
 
         }

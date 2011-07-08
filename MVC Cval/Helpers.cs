@@ -25,12 +25,12 @@ namespace MVCCval
         /// <returns></returns>
         internal static ValidationResult CValidate(this ICValidation validation, object value, ValidationContext validationContext, Func<object, ValidationContext, ValidationResult> baseFunction, ICValidationInternal validationInternal)
         {
-            var valueProviderResult = validationInternal.ValueProvider.GetValue(validation.ConditionProperty);
+            var valueProviderResult = validationInternal.ValueProvider.GetValue(validationInternal.ConditionProperty);
 
             if (valueProviderResult == null)
             {
                 // value for condition property is not supplied.
-                return new ValidationResult(String.Format(CultureInfo.CurrentCulture, "Could not find a property named {0}.", validation.ConditionProperty));
+                return new ValidationResult(String.Format(CultureInfo.CurrentCulture, "Could not find a property named {0}.", validationInternal.ConditionProperty));
             }
 
             bool shouldValidate = (bool)valueProviderResult.ConvertTo(_boolType);
@@ -74,6 +74,12 @@ namespace MVCCval
             }
         }
 
+        internal static ArgumentException NullOrEmptyException(string paramName)
+        {
+            // TODO:    make resource and be able to localize.
+            return new ArgumentException("Value cannot be null or empty.", paramName);
+        }
+
         public static void Init()
         {
             // don't do it if user already called Init for some reason and
@@ -82,6 +88,7 @@ namespace MVCCval
             {
                 _InitCalled = true;
                 DataAnnotationsModelValidatorProvider.RegisterAdapter(typeof(RequiredAttribute), typeof(MVCCval.RequiredAttributAdapter));
+                DataAnnotationsModelValidatorProvider.RegisterAdapter(typeof(StringLengthAttribute), typeof(MVCCval.StringLengthAttributAdapter));
             }
         }
     }

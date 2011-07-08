@@ -20,13 +20,23 @@
     <br /><span>Använd efternamn</span><br />
     @Html.CheckBoxFor(x => x.ShowCustomer)<br />
     
-    @Html.LabelFor(x => x.Customer.LastName)    
-    @Html.TextBoxFor(x => x.Customer.LastName, new { style = Model.ShowCustomer ? "" : "display: none;" })<br />
-    @Html.ValidationMessageFor(x => x.Customer.LastName)
+    <div id="validate" style='@(Model.ShowCustomer ? "" : "display: none;")'>
+        @Html.LabelFor(x => x.Customer.LastName)<br />    
+        @Html.TextBoxFor(x => x.Customer.LastName)<br />
+        @Html.ValidationMessageFor(x => x.Customer.LastName)<br />
 
-    @Html.LabelFor(x => x.Customer.IntValue)    
-    @Html.TextBoxFor(x => x.Customer.IntValue, new { style = Model.ShowCustomer ? "" : "display: none;" })<br />
-    @Html.ValidationMessageFor(x => x.Customer.IntValue)
+        @Html.LabelFor(x => x.Customer.IntValue)<br />    
+        @Html.TextBoxFor(x => x.Customer.IntValue)<br />
+        @Html.ValidationMessageFor(x => x.Customer.IntValue)<br />
+
+        @Html.LabelFor(x => x.Customer.MaxLength)<br />    
+        @Html.TextBoxFor(x => x.Customer.MaxLength)<br />
+        @Html.ValidationMessageFor(x => x.Customer.MaxLength)<br />
+
+        @Html.LabelFor(x => x.Customer.MinAndMaxLength)<br />    
+        @Html.TextBoxFor(x => x.Customer.MinAndMaxLength)<br />
+        @Html.ValidationMessageFor(x => x.Customer.MinAndMaxLength)<br />
+    </div>
 
     <input type="submit" />
 }
@@ -36,12 +46,10 @@
 
         $('#@Html.ViewData.TemplateInfo.GetFullHtmlFieldId("ShowCustomer")').change(function () {
             if ($(this).is(':checked')) {
-                $('#@Html.ViewData.TemplateInfo.GetFullHtmlFieldId("Customer.LastName")').css('display', '');
-                $('#@Html.ViewData.TemplateInfo.GetFullHtmlFieldId("Customer.IntValue")').css('display', '');
+                $('#validate').css('display', '');            
             }
             else {
-                $('#@Html.ViewData.TemplateInfo.GetFullHtmlFieldId("Customer.LastName")').css('display', 'none');
-                $('#@Html.ViewData.TemplateInfo.GetFullHtmlFieldId("Customer.IntValue")').css('display', 'none');
+                $('#validate').css('display', 'none');
             }
         });
     });

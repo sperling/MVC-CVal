@@ -8,6 +8,8 @@ namespace MVCCval
 {
     internal interface ICValidationInternal
     {
+        string ConditionProperty { get; set; }
+
         IValueProvider ValueProvider { get; set; }
 
         string PropertyName { get; set; }

@@ -8,11 +8,7 @@ namespace MVCCval
 {
     public interface ICValidation
     {
-        /// <summary>
-        /// 
-        /// </summary>
-        string ConditionProperty { get; set; }
-
+        
         /// <summary>
         /// 
         /// </summary>

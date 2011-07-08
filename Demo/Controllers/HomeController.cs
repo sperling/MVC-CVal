@@ -36,11 +36,17 @@ namespace Demo.Controllers
         [Required]
         public string FirstName { get; set; }
 
-        [MVCCval.Required(ConditionProperty = "ShowCustomer")]
+        [MVCCval.Required("ShowCustomer")]
         public string LastName { get; set; }
 
-        [MVCCval.Required(ConditionProperty = "ShowCustomer")]
+        [MVCCval.Required("ShowCustomer")]
         public int IntValue { get; set; }
+
+        [MVCCval.StringLength("ShowCustomer", 10)]
+        public string MaxLength { get; set; }
+
+        [MVCCval.StringLength("ShowCustomer", 10, MinimumLength=2)]
+        public string MinAndMaxLength { get; set; }
     }
 
     public class Checkout
