@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Web.Mvc;
+using System.Globalization;
 
 namespace MVCCval
 {
@@ -13,7 +14,7 @@ namespace MVCCval
             ErrorMessage = errorMessage;
             ValidationType = "cv" + OriginalValidationType;
             ValidationParameters.Add("conditionproperty", internalValidation.ConditionProperty);
-            ValidationParameters.Add("validateifnot", validation.ValidateIfNot);
+            ValidationParameters.Add("validateifnot", validation.ValidateIfNot.ToString(CultureInfo.InvariantCulture).ToLowerInvariant());
         }
 
         protected abstract string OriginalValidationType { get; }

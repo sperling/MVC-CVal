@@ -1,3 +1,5 @@
 * Add rest of attributes.
 * Make sure js works with radiobutton, select.
 * Set properties in AssemblyInfo.cs
+* Required and numver is added by MVC for none nullable valuetypes. Need to convert to our versions, else will get triggered if condition is
+  not true. Need to wrap ModelValidatorProviders and add our own...

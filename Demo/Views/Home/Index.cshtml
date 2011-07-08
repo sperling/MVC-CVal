@@ -17,7 +17,11 @@
     @Html.TextBoxFor(x => x.Customer.FirstName)
     @Html.ValidationMessageFor(x => x.Customer.FirstName)
 
-    <br /><span>Använd efternamn</span><br />
+    @Html.LabelFor(x => x.Customer.TestRangeInt)<br />    
+    @Html.TextBoxFor(x => x.Customer.TestRangeInt)<br />
+    @Html.ValidationMessageFor(x => x.Customer.TestRangeInt)<br />
+    
+    <br /><span>Use conditonal</span><br />
     @Html.CheckBoxFor(x => x.ShowCustomer)<br />
     
     <div id="validate" style='@(Model.ShowCustomer ? "" : "display: none;")'>
@@ -36,6 +40,10 @@
         @Html.LabelFor(x => x.Customer.MinAndMaxLength)<br />    
         @Html.TextBoxFor(x => x.Customer.MinAndMaxLength)<br />
         @Html.ValidationMessageFor(x => x.Customer.MinAndMaxLength)<br />
+
+        @Html.LabelFor(x => x.Customer.RangeInt)<br />    
+        @Html.TextBoxFor(x => x.Customer.RangeInt)<br />
+        @Html.ValidationMessageFor(x => x.Customer.RangeInt)<br />
     </div>
 
     <input type="submit" />

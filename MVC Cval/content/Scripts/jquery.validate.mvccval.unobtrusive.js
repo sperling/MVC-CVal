@@ -24,8 +24,19 @@
         options.rules[ruleName] = [conditionElement, ifnot];
 
         if (params !== undefined) {
+            
             // add remaning parameters needed for validation function.
             for (i = 0; i < params.length; i++) {
+                // we need to convert to numbers for this. taken from
+                // jQuery.validation.normalizeRules(), we are not using orginal names(prefix 'cv'), so are not trigged.
+                // clean number parameters
+                if (jQuery.inArray(params[i], ['minlength', 'maxlength', 'min', 'max']) > -1) {
+                    params[i + 1] = Number(params[i + 1]);
+                }
+                else if (jQuery.inArray(params[i], ['rangelength', 'range']) > -1) {
+                    params[i + 1] = Number(params[i + 1]);
+                    params[i + 2] = Number(params[i + 2]);
+                }
                 options.rules[ruleName].push(params[i]);
             }
         }
@@ -60,11 +71,11 @@
         var commonParams = ['conditionproperty', 'validateifnot'];
         params = params || [];
 
-        //commonParams.push.apply(commonParams, params);
-
-        //return commonParams;
         return commonParams.concat(params);
     }
+
+    // TODO:    can we reuse jQuery.validator.unobtrusive.adapters below?
+    //          avoid copy&paste somehow... need to have same logic.
 
     jQuery.validator.addMethod("cvrequired", function (value, element, params) {
         var that = this;
@@ -74,27 +85,20 @@
     });
 
     jQuery.validator.unobtrusive.adapters.add('cvrequired', ApplyParams(), function (options) {
-        Init(options, 'cvrequired');
+        // jQuery Validate equates "required" with "mandatory" for checkbox elements
+        if (options.element.tagName.toUpperCase() !== "INPUT" || options.element.type.toUpperCase() !== "CHECKBOX") {
+            Init(options, 'cvrequired');
+        }
     });
 
-    jQuery.validator.addMethod("cvrangelength", function (value, element, params) {
+    jQuery.validator.addMethod("cvminmax", function (value, element, params) {
         var that = this;
         return Validate(params[0], params[1], function () {
-            return jQuery.validator.methods['rangelength'].call(that, value, element, params.slice(2));
-        });
-    });
-
-    jQuery.validator.addMethod("cvlength", function (value, element, params) {
-        var that = this;
-        return Validate(params[0], params[1], function () {
-            if (params[2] === 'min') {
-                return jQuery.validator.methods['minlength'].call(that, value, element, params[3]);
-            }
-            else if (params[2] === 'max') {
-                return jQuery.validator.methods['maxlength'].call(that, value, element, params[3]);
+            if (params.length > 4) {
+                return jQuery.validator.methods[params[2]].call(that, value, element, params.slice(3));
             }
             else {
-                throw "Bad argument for 'cvlength'";
+                return jQuery.validator.methods[params[2]].call(that, value, element, params[3]);
             }
         });
     });
@@ -106,13 +110,30 @@
             max = options.params.max;
 
         if (min && max) {
-            Init(options, 'cvrangelength', [min, max]);
+            Init(options, 'cvminmax', ['rangelength', min, max]);
         }
         else if (min) {
-            Init(options, 'cvlength', ['min', min]);
+            Init(options, 'cvminmax', ['minlength', min]);
         }
         else if (max) {
-            Init(options, 'cvlength', ['max', max]);
+            Init(options, 'cvminmax', ['maxlength', max]);
+        }
+    });
+
+    jQuery.validator.unobtrusive.adapters.add('cvrange', ApplyParams(['min', 'max']), function (options) {
+        // from adapters.addMinMax
+        // have three rules here.
+        var min = options.params.min,
+            max = options.params.max;
+
+        if (min && max) {
+            Init(options, 'cvminmax', ['range', min, max]);
+        }
+        else if (min) {
+            Init(options, 'cvminmax', ['min', min]);
+        }
+        else if (max) {
+            Init(options, 'cvminmax', ['max', max]);
         }
     });
 

@@ -47,6 +47,12 @@ namespace Demo.Controllers
 
         [MVCCval.StringLength("ShowCustomer", 10, MinimumLength=2)]
         public string MinAndMaxLength { get; set; }
+
+        [MVCCval.Range("ShowCustomer", 3, 20)]
+        public int RangeInt { get; set; }
+
+        [Range(3, 20)]
+        public int TestRangeInt { get; set; }
     }
 
     public class Checkout
