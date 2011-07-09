@@ -90,6 +90,10 @@ namespace MVCCval
                 DataAnnotationsModelValidatorProvider.RegisterAdapter(typeof(RequiredAttribute), typeof(MVCCval.RequiredAttributAdapter));
                 DataAnnotationsModelValidatorProvider.RegisterAdapter(typeof(StringLengthAttribute), typeof(MVCCval.StringLengthAttributAdapter));
                 DataAnnotationsModelValidatorProvider.RegisterAdapter(typeof(RangeAttribute), typeof(MVCCval.RangeAttributAdapter));
+
+                var wrapModelValidatorProvider = new WrapModelValidatorProvider(new ModelValidatorProviderCollection(ModelValidatorProviders.Providers.ToList()));
+                ModelValidatorProviders.Providers.Clear();
+                ModelValidatorProviders.Providers.Add(wrapModelValidatorProvider);
             }
         }
     }
