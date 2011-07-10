@@ -119,9 +119,9 @@ namespace MVCCval
         }
     }
 
-    internal class RangeAttributAdapter : BaseAttributeAdapter<RangeAttribute>
+    internal class RangeAttributeAdapter : BaseAttributeAdapter<RangeAttribute>
     {
-        public RangeAttributAdapter(ModelMetadata metadata, ControllerContext context, RangeAttribute attribute)
+        public RangeAttributeAdapter(ModelMetadata metadata, ControllerContext context, RangeAttribute attribute)
             : base(metadata, context, attribute)
         {
 

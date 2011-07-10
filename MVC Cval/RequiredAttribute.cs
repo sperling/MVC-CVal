@@ -18,6 +18,24 @@ namespace MVCCval
             ((ICValidationInternal)this).ConditionProperty = conditionProperty;
         }
 
+        internal RequiredAttribute(string conditionProperty, bool validateIfNot, System.ComponentModel.DataAnnotations.RequiredAttribute orginalAttribute) : this(conditionProperty)
+        {
+            ValidateIfNot = validateIfNot;
+            this.AllowEmptyStrings = orginalAttribute.AllowEmptyStrings;
+            if (!String.IsNullOrEmpty(orginalAttribute.ErrorMessage))
+            {
+                this.ErrorMessage = orginalAttribute.ErrorMessage;
+            }
+            if (!String.IsNullOrEmpty(orginalAttribute.ErrorMessageResourceName))
+            {
+                this.ErrorMessageResourceName = orginalAttribute.ErrorMessageResourceName;
+            }
+            if (orginalAttribute.ErrorMessageResourceType != null)
+            {
+                this.ErrorMessageResourceType = orginalAttribute.ErrorMessageResourceType;
+            }
+        }
+
         #region IClientValidatable Members
 
         public IEnumerable<ModelClientValidationRule> GetClientValidationRules(ModelMetadata metadata, ControllerContext context)
@@ -91,9 +109,10 @@ namespace MVCCval
         }
     }
 
-    internal class RequiredAttributAdapter : BaseAttributeAdapter<RequiredAttribute>
+    internal class RequiredAttributeAdapter : BaseAttributeAdapter<RequiredAttribute>
     {
-        public RequiredAttributAdapter(ModelMetadata metadata, ControllerContext context, RequiredAttribute attribute) : base(metadata, context, attribute)
+        public RequiredAttributeAdapter(ModelMetadata metadata, ControllerContext context, RequiredAttribute attribute)
+            : base(metadata, context, attribute)
         {
 
         }

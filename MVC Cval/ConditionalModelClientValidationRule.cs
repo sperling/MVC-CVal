@@ -12,11 +12,25 @@ namespace MVCCval
         public ConditionalModelClientValidationRule(string errorMessage, ICValidation validation, ICValidationInternal internalValidation)
         {
             ErrorMessage = errorMessage;
-            ValidationType = "cv" + OriginalValidationType;
-            ValidationParameters.Add("conditionproperty", internalValidation.ConditionProperty);
-            ValidationParameters.Add("validateifnot", validation.ValidateIfNot.ToString(CultureInfo.InvariantCulture).ToLowerInvariant());
+            ValidationType = Setup(OriginalValidationType, ValidationParameters, internalValidation.ConditionProperty, validation.ValidateIfNot);
         }
 
         protected abstract string OriginalValidationType { get; }
+
+        /// <summary>
+        /// Shared with WrapNumericModelValidator.
+        /// </summary>
+        /// <param name="validationType"></param>
+        /// <param name="validationParameters"></param>
+        /// <param name="conditionProperty"></param>
+        /// <param name="validateIfNot"></param>
+        /// <returns></returns>
+        internal static string Setup(string validationType, IDictionary<string, object> validationParameters, string conditionProperty, bool validateIfNot)
+        {
+            validationParameters.Add("conditionproperty", conditionProperty);
+            validationParameters.Add("validateifnot", validateIfNot.ToString(CultureInfo.InvariantCulture).ToLowerInvariant());
+
+            return "cv" + validationType;
+        }
     }
 }

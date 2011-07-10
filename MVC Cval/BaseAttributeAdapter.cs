@@ -6,7 +6,13 @@ using System.Web.Mvc;
 
 namespace MVCCval
 {
-    internal class BaseAttributeAdapter<T> : DataAnnotationsModelValidator<T> where T : global::System.ComponentModel.DataAnnotations.ValidationAttribute
+    internal interface IBaseAttributeAdapter
+    {
+        ICValidationInternal CValidationInternal { get; set; }
+        ICValidation CValidation { get; set; }
+    }
+
+    internal class BaseAttributeAdapter<T> : DataAnnotationsModelValidator<T>, IBaseAttributeAdapter where T : global::System.ComponentModel.DataAnnotations.ValidationAttribute
     {
         public BaseAttributeAdapter(ModelMetadata metadata, ControllerContext context, T attribute) : base(metadata, context, attribute)
         {
@@ -17,6 +23,14 @@ namespace MVCCval
             cv.PropertyName = metadata.PropertyName;
             cv.ContainerName = metadata.ContainerType != null ? metadata.ContainerType.Name : "";
             cv.ModelState = context.Controller.ViewData.ModelState;
+
+            IBaseAttributeAdapter i = (IBaseAttributeAdapter)this;
+
+            i.CValidationInternal = cv;
+            i.CValidation = (ICValidation)attribute;
         }
+
+        ICValidationInternal IBaseAttributeAdapter.CValidationInternal { get; set; }
+        ICValidation IBaseAttributeAdapter.CValidation { get; set; }
     }
 }

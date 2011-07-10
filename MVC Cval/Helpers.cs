@@ -87,9 +87,9 @@ namespace MVCCval
             if (!_InitCalled)
             {
                 _InitCalled = true;
-                DataAnnotationsModelValidatorProvider.RegisterAdapter(typeof(RequiredAttribute), typeof(MVCCval.RequiredAttributAdapter));
-                DataAnnotationsModelValidatorProvider.RegisterAdapter(typeof(StringLengthAttribute), typeof(MVCCval.StringLengthAttributAdapter));
-                DataAnnotationsModelValidatorProvider.RegisterAdapter(typeof(RangeAttribute), typeof(MVCCval.RangeAttributAdapter));
+                DataAnnotationsModelValidatorProvider.RegisterAdapter(typeof(RequiredAttribute), typeof(MVCCval.RequiredAttributeAdapter));
+                DataAnnotationsModelValidatorProvider.RegisterAdapter(typeof(StringLengthAttribute), typeof(MVCCval.StringLengthAttributeAdapter));
+                DataAnnotationsModelValidatorProvider.RegisterAdapter(typeof(RangeAttribute), typeof(MVCCval.RangeAttributeAdapter));
 
                 var wrapModelValidatorProvider = new WrapModelValidatorProvider(new ModelValidatorProviderCollection(ModelValidatorProviders.Providers.ToList()));
                 ModelValidatorProviders.Providers.Clear();

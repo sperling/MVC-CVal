@@ -137,4 +137,15 @@
         }
     });
 
+    jQuery.validator.addMethod("cvnumber", function (value, element, params) {
+        var that = this;
+        return Validate(params[0], params[1], function () {
+            return jQuery.validator.methods['number'].call(that, value, element, true);
+        });
+    });
+
+    jQuery.validator.unobtrusive.adapters.add('cvnumber', ApplyParams(), function (options) {
+        Init(options, 'cvnumber');
+    });
+
 } (jQuery));

@@ -102,9 +102,9 @@ namespace MVCCval
         }
     }
 
-    internal class StringLengthAttributAdapter : BaseAttributeAdapter<StringLengthAttribute>
+    internal class StringLengthAttributeAdapter : BaseAttributeAdapter<StringLengthAttribute>
     {
-        public StringLengthAttributAdapter(ModelMetadata metadata, ControllerContext context, StringLengthAttribute attribute)
+        public StringLengthAttributeAdapter(ModelMetadata metadata, ControllerContext context, StringLengthAttribute attribute)
             : base(metadata, context, attribute)
         {
 
