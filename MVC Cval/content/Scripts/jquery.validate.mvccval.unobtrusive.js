@@ -148,4 +148,15 @@
         Init(options, 'cvnumber');
     });
 
+    jQuery.validator.addMethod("cvregex", function (value, element, params) {
+        var that = this;
+        return Validate(params[0], params[1], function () {
+            return jQuery.validator.methods['regex'].call(that, value, element, params[2]);
+        });
+    });
+
+    jQuery.validator.unobtrusive.adapters.add('cvregex', ApplyParams(['pattern']), function (options) {
+        Init(options, 'cvregex', [options.params.pattern]);
+    });
+
 } (jQuery));

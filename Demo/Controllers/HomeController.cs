@@ -53,6 +53,9 @@ namespace Demo.Controllers
 
         [Range(3, 20)]
         public int TestRangeInt { get; set; }
+
+        [MVCCval.RegularExpression("ShowCustomer", @"^\d{4}[\/-]\d{1,2}[\/-]\d{1,2}$")]
+        public string Date { get; set; }
     }
 
     public class Checkout
