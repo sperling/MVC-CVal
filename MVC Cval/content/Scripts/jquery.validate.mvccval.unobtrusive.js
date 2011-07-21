@@ -17,7 +17,7 @@
         var prefix = getModelPrefix(options.element.name),
             conditionProperty = options.params.conditionproperty,
             fullConditionName = appendModelPrefix(conditionProperty, prefix),
-            conditionElement = $(options.form).find(":input[name=" + fullConditionName + "]")[0],
+            conditionElement = $(options.form).find(":input[name='" + fullConditionName + "']")[0],       // OBS!!!   need the ' for exact match, was missing in mvc.
             ifnot = (/^true$/i).test(options.params.validateifnot);
         var i;
 
@@ -157,6 +157,23 @@
 
     jQuery.validator.unobtrusive.adapters.add('cvregex', ApplyParams(['pattern']), function (options) {
         Init(options, 'cvregex', [options.params.pattern]);
+    });
+
+    jQuery.validator.addMethod("cvequalto", function (value, element, params) {
+        var that = this;
+        return Validate(params[0], params[1], function () {
+            return jQuery.validator.methods['equalTo'].call(that, value, element, params[2]);
+        });
+    });
+
+    jQuery.validator.unobtrusive.adapters.add('cvequalto', ApplyParams(['other']), function (options) {
+        // from adapters.add("equalto")
+        var prefix = getModelPrefix(options.element.name),
+            other = options.params.other,
+            fullOtherName = appendModelPrefix(other, prefix),
+            element = $(options.form).find(":input[name='" + fullOtherName + "']")[0]; // OBS!!!   need the ' for exact match, was missing in mvc.
+
+        Init(options, 'cvequalto', [element]);
     });
 
 } (jQuery));

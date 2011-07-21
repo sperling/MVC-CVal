@@ -61,6 +61,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BaseAttributeAdapter.cs" />
+    <Compile Include="CompareAttribute.cs" />
     <Compile Include="ConditionalModelClientValidationRule.cs" />
     <Compile Include="RangeAttribute.cs" />
     <Compile Include="RegularExpressionAttribute.cs" />

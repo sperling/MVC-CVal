@@ -52,7 +52,7 @@ namespace MVCCval
                 property.SetValue(validationContext.ObjectInstance, v, null);
 
                 // also set ViewData.ModelState entry to default(T) where T is property type.
-                // or else Html.TextBoxFor() ect. will pick up value from request and render it.
+                // or else Html.TextBoxFor() etc. will pick up value from request and render it.
                 ModelState modelState;
                 string key = validationInternal.ContainerName != "" ? validationInternal.ContainerName + "." + validationInternal.PropertyName : validationInternal.PropertyName;
 
@@ -91,6 +91,7 @@ namespace MVCCval
                 DataAnnotationsModelValidatorProvider.RegisterAdapter(typeof(StringLengthAttribute), typeof(MVCCval.StringLengthAttributeAdapter));
                 DataAnnotationsModelValidatorProvider.RegisterAdapter(typeof(RangeAttribute), typeof(MVCCval.RangeAttributeAdapter));
                 DataAnnotationsModelValidatorProvider.RegisterAdapter(typeof(RegularExpressionAttribute), typeof(MVCCval.RegularExpressionAttributeAdapter));
+                DataAnnotationsModelValidatorProvider.RegisterAdapter(typeof(CompareAttribute), typeof(MVCCval.CompareAttributeAdapter));
 
                 var wrapModelValidatorProvider = new WrapModelValidatorProvider(new ModelValidatorProviderCollection(ModelValidatorProviders.Providers.ToList()));
                 ModelValidatorProviders.Providers.Clear();

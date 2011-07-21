@@ -56,6 +56,11 @@ namespace Demo.Controllers
 
         [MVCCval.RegularExpression("ShowCustomer", @"^\d{4}[\/-]\d{1,2}[\/-]\d{1,2}$")]
         public string Date { get; set; }
+
+        public string Password { get; set; }
+
+        [MVCCval.Compare("ShowCustomer", "Password")]
+        public string RetypePassword { get; set; }
     }
 
     public class Checkout

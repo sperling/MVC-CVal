@@ -48,6 +48,15 @@
         @Html.LabelFor(x => x.Customer.Date)<br />    
         @Html.TextBoxFor(x => x.Customer.Date)<br />
         @Html.ValidationMessageFor(x => x.Customer.Date)<br />
+
+        Should be equal:<br />
+        @Html.LabelFor(x => x.Customer.Password)<br />    
+        @Html.TextBoxFor(x => x.Customer.Password)<br />
+        @Html.ValidationMessageFor(x => x.Customer.Password)<br />
+
+        @Html.LabelFor(x => x.Customer.RetypePassword)<br />    
+        @Html.TextBoxFor(x => x.Customer.RetypePassword)<br />
+        @Html.ValidationMessageFor(x => x.Customer.RetypePassword)<br />
     </div>
 
     <input type="submit" />
