@@ -1,6 +1,11 @@
 ﻿(function ($) {
 
     // taken from jquery.validate.unobtrusive.js
+    function splitAndTrim(value) {
+        return value.replace(/^\s+|\s+$/g, "").split(/\s*,\s*/g);
+    }
+
+    // taken from jquery.validate.unobtrusive.js
     function getModelPrefix(fieldName) {
         return fieldName.substr(0, fieldName.lastIndexOf(".") + 1);
     }
@@ -24,7 +29,7 @@
         options.rules[ruleName] = [conditionElement, ifnot];
 
         if (params !== undefined) {
-            
+
             // add remaning parameters needed for validation function.
             for (i = 0; i < params.length; i++) {
                 // we need to convert to numbers for this. taken from
@@ -45,6 +50,7 @@
             options.messages[ruleName] = options.message;
         }
 
+        // FIXME:   live here?
         $(conditionElement).change(function () {
             // run validation for element again if condition is not true anymore.
             // hide error message.
@@ -174,6 +180,32 @@
             element = $(options.form).find(":input[name='" + fullOtherName + "']")[0]; // OBS!!!   need the ' for exact match, was missing in mvc.
 
         Init(options, 'cvequalto', [element]);
+    });
+
+    jQuery.validator.addMethod("cvremote", function (value, element, params) {
+        var that = this;
+        return Validate(params[0], params[1], function () {
+            return jQuery.validator.methods['remote'].call(that, value, element, params[2]);
+        });
+    });
+
+    jQuery.validator.unobtrusive.adapters.add('cvremote', ApplyParams(["url", "type", "additionalfields"]), function (options) {
+        // from adapters.add("remote")
+        var value = {
+            url: options.params.url,
+            type: options.params.type || "GET",
+            data: {}
+        },
+            prefix = getModelPrefix(options.element.name);
+
+        $.each(splitAndTrim(options.params.additionalfields || options.element.name), function (i, fieldName) {
+            var paramName = appendModelPrefix(fieldName, prefix);
+            value.data[paramName] = function () {
+                return $(options.form).find(":input[name='" + paramName + "']").val();
+            };
+        });
+
+        Init(options, 'cvremote', [value]);
     });
 
 } (jQuery));

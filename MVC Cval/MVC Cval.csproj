@@ -65,6 +65,7 @@
     <Compile Include="ConditionalModelClientValidationRule.cs" />
     <Compile Include="RangeAttribute.cs" />
     <Compile Include="RegularExpressionAttribute.cs" />
+    <Compile Include="RemoteAttribute.cs" />
     <Compile Include="StringLengthAttribute.cs" />
     <Compile Include="WrapModelValidatorProvider.cs" />
     <Content Include="content\App_Start\MVCCValInit.cs.pp" />

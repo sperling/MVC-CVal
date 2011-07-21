@@ -29,6 +29,18 @@ namespace Demo.Controllers
         {
             return View();
         }
+
+        public ActionResult Remote(Customer customer)
+        {
+            if (customer != null && customer.Remote == "secret")
+            {
+                return Json(true, JsonRequestBehavior.AllowGet);
+            }
+            else
+            {
+                return Json(false, JsonRequestBehavior.AllowGet);
+            }
+        }
     }
 
     public class Customer
@@ -61,6 +73,9 @@ namespace Demo.Controllers
 
         [MVCCval.Compare("ShowCustomer", "Password")]
         public string RetypePassword { get; set; }
+
+        [MVCCval.Remote("ShowCustomer", "Remote", "Home")]
+        public string Remote { get; set; }
     }
 
     public class Checkout
