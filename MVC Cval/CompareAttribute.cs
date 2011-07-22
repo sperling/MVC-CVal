@@ -18,14 +18,10 @@ namespace MVCCval
             ((ICValidationInternal)this).ConditionProperty = conditionProperty;
         }
 
-        #region IClientValidatable Members
-
-        public IEnumerable<System.Web.Mvc.ModelClientValidationRule> GetClientValidationRules(System.Web.Mvc.ModelMetadata metadata, System.Web.Mvc.ControllerContext context)
+        public new IEnumerable<System.Web.Mvc.ModelClientValidationRule> GetClientValidationRules(System.Web.Mvc.ModelMetadata metadata, System.Web.Mvc.ControllerContext context)
         {
             yield return new ModelClientValidationEqualToRule(FormatErrorMessage(metadata.GetDisplayName()), this, this, FormatPropertyForClientValidation(OtherProperty));
         }
-
-        #endregion
 
         #region ICValidation Members
 

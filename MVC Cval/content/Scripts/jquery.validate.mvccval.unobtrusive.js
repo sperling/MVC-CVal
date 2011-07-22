@@ -48,6 +48,13 @@
 
         if (options.message) {
             options.messages[ruleName] = options.message;
+
+            // remote function are using 'remote' for error message on the first time
+            // when server are not returning error message when validation fails.
+            // so copy over error message to 'remote'.
+            if (ruleName === 'cvremote') {
+                options.messages[ruleName.substring(2)] = options.message;
+            }
         }
 
         // FIXME:   live here?

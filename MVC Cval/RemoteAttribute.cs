@@ -48,15 +48,10 @@ namespace MVCCval
             _conditionProperty = conditionProperty;
         }
 
-        #region IClientValidatable Members
-
-        public IEnumerable<System.Web.Mvc.ModelClientValidationRule> GetClientValidationRules(System.Web.Mvc.ModelMetadata metadata, System.Web.Mvc.ControllerContext context)
+        public new IEnumerable<System.Web.Mvc.ModelClientValidationRule> GetClientValidationRules(System.Web.Mvc.ModelMetadata metadata, System.Web.Mvc.ControllerContext context)
         {
             yield return new ModelClientValidationRemoteRule(_conditionProperty, ValidateIfNot, FormatErrorMessage(metadata.GetDisplayName()), GetUrl(context), HttpMethod, FormatAdditionalFieldsForClientValidation(metadata.PropertyName));
         }
-
-        #endregion
-
 
         public override bool IsValid(object value)
         {

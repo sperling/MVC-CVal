@@ -1,4 +1,4 @@
+* Add README and license.
 * Make sure js works with radiobutton, select.
 * Set properties in AssemblyInfo.cs
-* Remote are showing default message on first request(when validation fails and not returning validation message).
-  Should show the specified message...
+* Use only one jQuery.validator.addMethod('cvalidation') for all validation functions.
