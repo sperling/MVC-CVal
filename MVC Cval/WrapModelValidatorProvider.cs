@@ -85,16 +85,25 @@ namespace MVCCval
             private readonly string _condtionProperty;
             private readonly bool _validateIfNot;
 
+            private readonly IValueProvider _valueProvider;
+            private readonly string _propertyName;
+            private readonly string _containerName;
+            private readonly ModelStateDictionary _modelState;
+
             public WrapNumericModelValidator(ModelMetadata metadata, ControllerContext controllerContext, ModelValidator inner, string conditionProperty, bool validateIfNot) : base(metadata, controllerContext)
             {
                 _inner = inner;
                 _condtionProperty = conditionProperty;
                 _validateIfNot = validateIfNot;
+
+                BaseAttributeAdapter<RequiredAttribute>.ExtractMetadata(controllerContext, metadata, out _valueProvider, out _propertyName, out _containerName, out _modelState);
+
             }
 
             public override IEnumerable<ModelValidationResult> Validate(object container)
             {
-                return _inner.Validate(container);
+                //return _inner.Validate(container);
+                return Helpers.CValidate(container, _condtionProperty, _validateIfNot, _propertyName, _containerName, _valueProvider, _modelState, _inner.Validate);
             }
 
             public override IEnumerable<ModelClientValidationRule> GetClientValidationRules()
