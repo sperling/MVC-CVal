@@ -35,10 +35,10 @@
                 // we need to convert to numbers for this. taken from
                 // jQuery.validation.normalizeRules(), we are not using orginal names(prefix 'cv'), so are not trigged.
                 // clean number parameters
-                if (jQuery.inArray(params[i], ['minlength', 'maxlength', 'min', 'max']) > -1) {
+                if ($.inArray(params[i], ['minlength', 'maxlength', 'min', 'max']) > -1) {
                     params[i + 1] = Number(params[i + 1]);
                 }
-                else if (jQuery.inArray(params[i], ['rangelength', 'range']) > -1) {
+                else if ($.inArray(params[i], ['rangelength', 'range']) > -1) {
                     params[i + 1] = Number(params[i + 1]);
                     params[i + 2] = Number(params[i + 2]);
                 }
@@ -90,50 +90,143 @@
     // TODO:    can we reuse jQuery.validator.unobtrusive.adapters below?
     //          avoid copy&paste somehow... need to have same logic.
 
-    jQuery.validator.addMethod("cvrequired", function (value, element, params) {
-        var that = this;
-        return Validate(params[0], params[1], function () {
-            return jQuery.validator.methods['required'].call(that, value, element, true);
-        });
+    /*$.validator.addMethod("cvrequired", function (value, element, params) {
+    var that = this;
+    return Validate(params[0], params[1], function () {
+    return $.validator.methods['required'].call(that, value, element, true);
     });
+    });*/
 
-    jQuery.validator.unobtrusive.adapters.add('cvrequired', ApplyParams(), function (options) {
-        // jQuery Validate equates "required" with "mandatory" for checkbox elements
-        if (options.element.tagName.toUpperCase() !== "INPUT" || options.element.type.toUpperCase() !== "CHECKBOX") {
-            Init(options, 'cvrequired');
+    /*$.validator.unobtrusive.adapters.add('cvrequired', ApplyParams(), function (options) {
+    // jQuery Validate equates "required" with "mandatory" for checkbox elements
+    if (options.element.tagName.toUpperCase() !== "INPUT" || options.element.type.toUpperCase() !== "CHECKBOX") {
+    Init(options, 'cvrequired');
+    }
+    });*/
+
+    function GetAdaptor(name) {
+        for (var i = 0; i < $.validator.unobtrusive.adapters.length; i++) {
+            if ($.validator.unobtrusive.adapters[i].name === name) {
+                return $.validator.unobtrusive.adapters[i].adapt;
+            }
+        }
+
+        throw new Error("Can't find adapt function for validation rule " + name);
+    }
+
+    var _validateRule = "cvalidate";
+
+    function Setup(ruleName, options) {
+        var adaptor = GetAdaptor(ruleName);
+        var realOptions =
+        {
+            element: options.element,
+            form: options.form,
+            message: options.message,
+            params: options.params,
+            rules: {},
+            messages: {}
+        };
+        var prefix = getModelPrefix(options.element.name),
+            conditionProperty = options.params.conditionproperty,
+            fullConditionName = appendModelPrefix(conditionProperty, prefix),
+            conditionElement = $(options.form).find(":input[name='" + fullConditionName + "']")[0],       // OBS!!!   need the ' for exact match, was missing in mvc.
+            ifnot = (/^true$/i).test(options.params.validateifnot);
+
+        adaptor(realOptions);
+
+        if (ruleName === 'required' && realOptions.rules[ruleName] === undefined) {
+            // not added, for required...
+            return;
+        }
+
+        $.validator.normalizeRules(realOptions.rules, realOptions.element);
+
+        options.rules[_validateRule] = [conditionElement, ifnot, realOptions.rules];
+        if (options.message) {
+            options.messages[_validateRule] = options.message;
+            // remote function are using 'remote' for error message on the first time
+            // when server are not returning error message when validation fails.
+            // so copy over error message to 'remote'.
+            if (ruleName === 'remote') {
+                options.messages[ruleName] = options.message;
+            }
+        }
+
+        // FIXME:   live here?
+        $(conditionElement).change(function () {
+            // run validation for element again if condition is not true anymore.
+            // hide error message.
+            // TODO:    make sure it works with radiobutton, select.
+            if ($(this).is(':checked') === ifnot) {
+                $(options.form).validate().element(options.element);
+            }
+        });
+    }
+
+    $.validator.addMethod(_validateRule, function (value, element, params) {
+        var condition = !params[1];
+
+        // TODO:    make sure it works with radiobutton, select.
+        if ($(params[0]).is(':checked') === condition) {
+            for (var method in params[2]) {
+                var rule = { method: method, parameters: params[2][method] };
+                var ret = $.validator.methods[rule.method].call(this, value, element, rule.parameters);
+
+                if (!ret) {
+                    return ret;
+                }
+            }
+
+            return true;
+        }
+        else {
+            return true;
         }
     });
 
-    jQuery.validator.addMethod("cvminmax", function (value, element, params) {
+    $.validator.unobtrusive.adapters.add('cvrequired', ApplyParams(), function (options) {
+        Setup('required', options);
+    });
+
+    $.validator.unobtrusive.adapters.add('cvremote', ApplyParams(["url", "type", "additionalfields"]), function (options) {
+        Setup('remote', options);
+    });
+
+    $.validator.unobtrusive.adapters.add('cvlength', ApplyParams(['min', 'max']), function (options) {
+        Setup('length', options);
+    });
+
+    $.validator.addMethod("cvminmax", function (value, element, params) {
         var that = this;
         return Validate(params[0], params[1], function () {
             if (params.length > 4) {
-                return jQuery.validator.methods[params[2]].call(that, value, element, params.slice(3));
+                return $.validator.methods[params[2]].call(that, value, element, params.slice(3));
             }
             else {
-                return jQuery.validator.methods[params[2]].call(that, value, element, params[3]);
+                return $.validator.methods[params[2]].call(that, value, element, params[3]);
             }
         });
     });
 
-    jQuery.validator.unobtrusive.adapters.add('cvlength', ApplyParams(['min', 'max']), function (options) {
-        // from adapters.addMinMax
-        // have three rules here.
-        var min = options.params.min,
-            max = options.params.max;
+    /*$.validator.unobtrusive.adapters.add('cvlength', ApplyParams(['min', 'max']), function (options) {
+    // from adapters.addMinMax
+    // have three rules here.
+    var min = options.params.min,
+    max = options.params.max;
 
-        if (min && max) {
-            Init(options, 'cvminmax', ['rangelength', min, max]);
-        }
-        else if (min) {
-            Init(options, 'cvminmax', ['minlength', min]);
-        }
-        else if (max) {
-            Init(options, 'cvminmax', ['maxlength', max]);
-        }
-    });
+    if (min && max) {
+    Init(options, 'cvminmax', ['rangelength', min, max]);
+    }
+    else if (min) {
+    Init(options, 'cvminmax', ['minlength', min]);
+    }
+    else if (max) {
+    Init(options, 'cvminmax', ['maxlength', max]);
+    }
+    });*/
 
-    jQuery.validator.unobtrusive.adapters.add('cvrange', ApplyParams(['min', 'max']), function (options) {
+    $.validator.unobtrusive.adapters.add('cvrange', ApplyParams(['min', 'max']), function (options) {
         // from adapters.addMinMax
         // have three rules here.
         var min = options.params.min,
@@ -150,36 +243,36 @@
         }
     });
 
-    jQuery.validator.addMethod("cvnumber", function (value, element, params) {
+    $.validator.addMethod("cvnumber", function (value, element, params) {
         var that = this;
         return Validate(params[0], params[1], function () {
-            return jQuery.validator.methods['number'].call(that, value, element, true);
+            return $.validator.methods['number'].call(that, value, element, true);
         });
     });
 
-    jQuery.validator.unobtrusive.adapters.add('cvnumber', ApplyParams(), function (options) {
+    $.validator.unobtrusive.adapters.add('cvnumber', ApplyParams(), function (options) {
         Init(options, 'cvnumber');
     });
 
-    jQuery.validator.addMethod("cvregex", function (value, element, params) {
+    $.validator.addMethod("cvregex", function (value, element, params) {
         var that = this;
         return Validate(params[0], params[1], function () {
-            return jQuery.validator.methods['regex'].call(that, value, element, params[2]);
+            return $.validator.methods['regex'].call(that, value, element, params[2]);
         });
     });
 
-    jQuery.validator.unobtrusive.adapters.add('cvregex', ApplyParams(['pattern']), function (options) {
+    $.validator.unobtrusive.adapters.add('cvregex', ApplyParams(['pattern']), function (options) {
         Init(options, 'cvregex', [options.params.pattern]);
     });
 
-    jQuery.validator.addMethod("cvequalto", function (value, element, params) {
+    $.validator.addMethod("cvequalto", function (value, element, params) {
         var that = this;
         return Validate(params[0], params[1], function () {
-            return jQuery.validator.methods['equalTo'].call(that, value, element, params[2]);
+            return $.validator.methods['equalTo'].call(that, value, element, params[2]);
         });
     });
 
-    jQuery.validator.unobtrusive.adapters.add('cvequalto', ApplyParams(['other']), function (options) {
+    $.validator.unobtrusive.adapters.add('cvequalto', ApplyParams(['other']), function (options) {
         // from adapters.add("equalto")
         var prefix = getModelPrefix(options.element.name),
             other = options.params.other,
@@ -189,30 +282,30 @@
         Init(options, 'cvequalto', [element]);
     });
 
-    jQuery.validator.addMethod("cvremote", function (value, element, params) {
-        var that = this;
-        return Validate(params[0], params[1], function () {
-            return jQuery.validator.methods['remote'].call(that, value, element, params[2]);
-        });
+    /*$.validator.addMethod("cvremote", function (value, element, params) {
+    var that = this;
+    return Validate(params[0], params[1], function () {
+    return $.validator.methods['remote'].call(that, value, element, params[2]);
+    });
     });
 
-    jQuery.validator.unobtrusive.adapters.add('cvremote', ApplyParams(["url", "type", "additionalfields"]), function (options) {
-        // from adapters.add("remote")
-        var value = {
-            url: options.params.url,
-            type: options.params.type || "GET",
-            data: {}
-        },
-            prefix = getModelPrefix(options.element.name);
+    $.validator.unobtrusive.adapters.add('cvremote', ApplyParams(["url", "type", "additionalfields"]), function (options) {
+    // from adapters.add("remote")
+    var value = {
+    url: options.params.url,
+    type: options.params.type || "GET",
+    data: {}
+    },
+    prefix = getModelPrefix(options.element.name);
 
-        $.each(splitAndTrim(options.params.additionalfields || options.element.name), function (i, fieldName) {
-            var paramName = appendModelPrefix(fieldName, prefix);
-            value.data[paramName] = function () {
-                return $(options.form).find(":input[name='" + paramName + "']").val();
-            };
-        });
-
-        Init(options, 'cvremote', [value]);
+    $.each(splitAndTrim(options.params.additionalfields || options.element.name), function (i, fieldName) {
+    var paramName = appendModelPrefix(fieldName, prefix);
+    value.data[paramName] = function () {
+    return $(options.form).find(":input[name='" + paramName + "']").val();
+    };
     });
+
+    Init(options, 'cvremote', [value]);
+    });*/
 
 } (jQuery));
