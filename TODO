@@ -1,4 +1,4 @@
 * Add README and license.
 * Make sure js works with radiobutton, select.
 * Set properties in AssemblyInfo.cs
-* Use only one jQuery.validator.addMethod('cvalidation') for all validation functions.
+* Don't clear errors server side when not validating. WrapNumericModelValidator should be running earlier if possible. 
